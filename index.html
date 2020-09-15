@@ -8,23 +8,59 @@
   </head>
 
   <body>
-    <div id="canvas"></div>
+    <!-- <div id="canvas"></div>
     <script>
-      canvas.onclick = (e) => {
-        console.log(e.clientX);
-        console.log(e.clientY);
-        let div = document.createElement("div");
-        div.style.position = "absolute";
-        div.style.left = e.clientX + "px";
-        div.style.top = e.clientY + "px";
-        // div.style.border = "1px solid red";
-        div.style.width = "6px";
-        div.style.height = "6px";
-        div.style.marginLeft = "-3px";
-        div.style.marginTop = "-3px";
-        div.style.borderRadius = "50%";
-        div.style.backgroundColor = "black";
-        canvas.appendChild(div);
+      // canvas.onmousemove = (e) => {
+      //   console.log(e.clientX);
+      //   console.log(e.clientY);
+      //   let div = document.createElement("div");
+      //   div.style.position = "absolute";
+      //   div.style.left = e.clientX + "px";
+      //   div.style.top = e.clientY + "px";
+      //   // div.style.border = "1px solid red";
+      //   div.style.width = "6px";
+      //   div.style.height = "6px";
+      //   div.style.marginLeft = "-3px";
+      //   div.style.marginTop = "-3px";
+      //   div.style.borderRadius = "50%";
+      //   div.style.backgroundColor = "black";
+      //   canvas.appendChild(div);用onmousemove事件可以在画板上画圈，
+      // };但JS去操作DOM是很慢的，JS引擎跨线程通讯渲染引擎（dom）是很慢的
+    </script> -->
+
+    <canvas id="canvas" width="100" height="100"></canvas>
+    <script>
+      //画线,canvas一开始的宽高就是确定的，如果强行在CSS里面改的话，会使得画拉伸模糊
+      let canvas = document.getElementById("canvas");
+      canvas.width = document.documentElement.clientWidth; //JS获取屏幕宽高，
+      canvas.height = document.documentElement.clientHeight; //canvas宽等于屏幕得宽，高等于屏幕的高
+
+      let ctx = canvas.getContext("2d");
+      let painting = false;
+
+      ctx.fillStyle = "black";
+      ctx.strokeStyle = "none";
+
+      canvas.onmousedown = () => {
+        painting = true;
+      };
+      canvas.onmousemove = (e) => {
+        if (painting === true) {
+          //一定要是三个等于号老是忘
+          // console.log(e.clientX);
+          // console.log(e.clientY);
+          // ctx.fillRect(e.clientX - 5, e.clientY - 5, 10, 10); //(平移，纵移，宽，高)
+          ctx.beginPath();
+          ctx.arc(e.clientX, e.clientY, 5, 0, 2 * Math.PI);
+          ctx.stroke();
+          ctx.fill();
+          //绘制图形圆
+        } else {
+          console.log("什么都不做");
+        }
+      };
+      canvas.onmouseup = () => {
+        painting = false;
       };
     </script>
   </body>
