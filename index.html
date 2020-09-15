@@ -34,34 +34,68 @@
       let canvas = document.getElementById("canvas");
       canvas.width = document.documentElement.clientWidth; //JS获取屏幕宽高，
       canvas.height = document.documentElement.clientHeight; //canvas宽等于屏幕得宽，高等于屏幕的高
-
       let ctx = canvas.getContext("2d");
+      ctx.fillStyle = "black"; //填充样式
+      ctx.strokeStyle = "none"; //描边 样式
+      ctx.lineWidth = 5; //JS canvas stroke width 控制线的粗细
+      ctx.lineCap = "round"; //JS line end round 连接线
+
       let painting = false;
+      let last;
 
-      ctx.fillStyle = "black";
-      ctx.strokeStyle = "none";
+      var isTouchDevice = "ontouchstart" in document.documentElement;
+      // console.log("isTouchDevice")
+      //JS detect touch support js要检测是否支持触屏，使用以下代码:https://www.jianshu.com/p/94b6b6540e72
+      if (isTouchDevice) {
+        canvas.ontouchstart = (e) => {
+          let x = e.touches[0].clientX;
+          let y = e.touches[0].clientY;
+          last = [x, y];
+        };
+        canvas.ontouchmove = (e) => {
+          let x = e.touches[0].clientX;
+          let y = e.touches[0].clientY;
+          // console.log(x, y);
+          // ctx.beginPath();
+          // ctx.arc(x, y, 5, 0, 2 * Math.PI);
+          // ctx.stroke();
+          // ctx.fill();
+          drawLine(last[0], last[1], x, y);
+          last = [x, y];
+        };
+      } else {
+        canvas.onmousedown = (e) => {
+          painting = true;
+          last = [e.clientX, e.clientY];
+        };
+        canvas.onmousemove = (e) => {
+          if (painting === true) {
+            //一定要是三个等于号老是忘
+            // console.log(e.clientX);
+            // console.log(e.clientY);
+            // ctx.fillRect(e.clientX - 5, e.clientY - 5, 10, 10); //(平移，纵移，宽，高)
+            // ctx.beginPath();
+            // ctx.arc(x.clientX, x.clientY, 5, 0, 2 * Math.PI);
+            // ctx.stroke();
+            // ctx.fill();
+            //绘制图形圆
+            drawLine(last[0], last[1], e.clientX, e.clientY); //原来的值
+            last = [e.clientX, e.clientY]; //赋为新的值
+          }
+        };
+        canvas.onmouseup = () => {
+          painting = false;
+        };
+      }
 
-      canvas.onmousedown = () => {
-        painting = true;
-      };
-      canvas.onmousemove = (e) => {
-        if (painting === true) {
-          //一定要是三个等于号老是忘
-          // console.log(e.clientX);
-          // console.log(e.clientY);
-          // ctx.fillRect(e.clientX - 5, e.clientY - 5, 10, 10); //(平移，纵移，宽，高)
-          ctx.beginPath();
-          ctx.arc(e.clientX, e.clientY, 5, 0, 2 * Math.PI);
-          ctx.stroke();
-          ctx.fill();
-          //绘制图形圆
-        } else {
-          console.log("什么都不做");
-        }
-      };
-      canvas.onmouseup = () => {
-        painting = false;
-      };
+      function drawLine(x1, y1, x2, y2) {
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        // ctx.lineTo(45, 125);
+        // ctx.closePath();
+        ctx.stroke();
+      } //使用canvas画图找线
     </script>
   </body>
 </html>

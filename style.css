@@ -8,4 +8,6 @@
   /* height: 100vh;
      width: 100vw;
      border: 1px solid red; */
+  display: block;
+  /* 文件展示的是内联元素,不是块级元素 */
 }
